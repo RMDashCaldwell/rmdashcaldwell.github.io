@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0F3D24">
+  <meta name="description" content="Dice Dash is a quick dice race for iPhone. Roll six dice, keep the matches, and be the first to fill every number from 1 to 12.">
+  <meta property="og:title" content="Dice Dash">
+  <meta property="og:description" content="Fill 1–12 before your rival. A quick dice race for iPhone.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rmdashcaldwell.github.io/">
+  <meta property="og:image" content="https://rmdashcaldwell.github.io/icon.png">
+  <meta name="twitter:card" content="summary">
+  <title>Dice Dash</title>
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <style>
+    :root {
+      --baize-deep: #0F3D24;
+      --baize-mid: #1B5E35;
+      --baize-lite: #2E8B57;
+      --baize-bright: #3A9B62;
+      --header: #1B5E20;
+      --gold: #FFC94A;
+      --gold-deep: #E6A800;
+      --gold-lite: #FFDE85;
+      --cream: #FFFDF9;
+      --ivory: #F7F5F0;
+      --ink: #1A2E1F;
+      --wood: #7A4A22;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--cream);
+      background-color: var(--baize-deep);
+      background-image:
+        radial-gradient(ellipse 130% 70% at 50% -15%, rgba(58, 155, 98, 0.85) 0%, transparent 58%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(255, 201, 74, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 0% 80%, rgba(15, 61, 36, 0.9) 0%, transparent 55%),
+        linear-gradient(180deg, var(--baize-mid) 0%, var(--baize-deep) 72%);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle felt grain, no external assets */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px 20px 28px;
+      text-align: center;
+    }
+
+    .icon {
+      width: 148px;
+      height: 148px;
+      border-radius: 32px;
+      object-fit: cover;
+      background: var(--baize-mid);
+      box-shadow:
+        0 0 0 3px var(--gold),
+        0 0 0 6px rgba(15, 61, 36, 0.55),
+        0 16px 32px rgba(0, 0, 0, 0.45),
+        0 0 48px rgba(255, 201, 74, 0.22);
+    }
+
+    h1 {
+      margin: 22px 0 8px;
+      font-size: 2.45rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--cream);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .tagline {
+      margin: 0 0 22px;
+      color: var(--gold);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .tagline::after {
+      content: "";
+      display: block;
+      width: 64px;
+      height: 3px;
+      margin: 16px auto 0;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 2px;
+    }
+
+    .desc {
+      margin: 0 auto 26px;
+      max-width: 34em;
+      color: var(--ivory);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .desc p { margin: 0 0 0.85em; }
+    .desc p:last-child { margin-bottom: 0; }
+
+    .store-btn {
+      display: inline-block;
+      background: linear-gradient(180deg, var(--gold-lite) 0%, var(--gold) 48%, var(--gold-deep) 100%);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid var(--gold-deep);
+      box-shadow:
+        0 3px 0 var(--wood),
+        0 10px 22px rgba(0, 0, 0, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .store-btn:hover,
+    .store-btn:focus-visible {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .store-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--wood), 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .store-btn:focus-visible {
+      outline: 3px solid var(--cream);
+      outline-offset: 3px;
+    }
+
+    .soon {
+      display: inline-block;
+      margin: 18px 0 0;
+      padding: 6px 14px;
+      border: 1px solid rgba(255, 201, 74, 0.55);
+      border-radius: 999px;
+      color: var(--gold);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: rgba(15, 61, 36, 0.35);
+    }
+
+    .shots {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      margin: 32px -20px 4px;
+      padding: 8px 20px 20px;
+      justify-content: flex-start;
+    }
+
+    .shots::-webkit-scrollbar { height: 6px; }
+    .shots::-webkit-scrollbar-thumb {
+      background: rgba(255, 201, 74, 0.45);
+      border-radius: 999px;
+    }
+
+    .shots figure {
+      margin: 0;
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      width: 148px;
+    }
+
+    .shots img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    }
+
+
+    footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 201, 74, 0.28);
+      color: rgba(247, 245, 240, 0.8);
+      font-size: 0.92rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 201, 74, 0.45);
+    }
+
+    footer a:hover,
+    footer a:focus-visible {
+      color: var(--gold-lite);
+      border-bottom-color: var(--gold-lite);
+    }
+
+    footer a:focus-visible {
+      outline: 2px solid var(--cream);
+      outline-offset: 3px;
+    }
+
+    footer .copy {
+      margin: 12px 0 0;
+      font-size: 0.85rem;
+      color: rgba(247, 245, 240, 0.65);
+    }
+
+    @media (min-width: 640px) {
+      .page { padding: 56px 28px 40px; }
+      .icon { width: 168px; height: 168px; border-radius: 38px; }
+      h1 { font-size: 3rem; }
+      .shots {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        justify-content: center;
+        overflow: visible;
+      }
+      .shots figure { width: 210px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <img class="icon" src="icon.png" width="1024" height="1024" alt="Dice Dash app icon: a cream die with a gold edge racing across a green felt table">
+    <h1>Dice Dash</h1>
+    <p class="tagline">Fill 1–12 before your rival</p>
+    <div class="desc">
+      <p>Dice Dash is a quick, easy-to-learn dice race for one or two players. Roll six dice, keep the matches, and be the first to fill every number from 1 to 12.</p>
+      <p>Play a friend on one phone, or take on the Easy, Normal or Hard bot — even offline.</p>
+    </div>
+    <a class="store-btn" href="https://apps.apple.com/app/id6833116278">Download on the App Store</a>
+    <div><span class="soon">Local Multiplayer — coming soon</span></div>
+    <div class="shots" aria-label="App screenshots">
+      <figure>
+        <img src="screenshot-setup.jpg" width="600" height="1304" alt="Setup screen: choose 1 Player or 2 Players, bot difficulty, and a single game or a best-of match">
+      </figure>
+      <figure>
+        <img src="screenshot-game.jpg" width="600" height="1304" alt="Game screen: six dice on a green felt table, with number plaques from 1 to 12 to fill">
+      </figure>
+      <figure>
+        <img src="screenshot-win.jpg" width="600" height="1304" alt="Win screen with a gold trophy and confetti after finishing all twelve numbers">
+      </figure>
+    </div>
+    <footer>
+      <a href="https://rmdashcaldwell.github.io/dicedash-privacy/">Privacy Policy</a>
+      <p class="copy">© 2026 Ryan Caldwell</p>
+    </footer>
+  </main>
+</body>
+</html>
